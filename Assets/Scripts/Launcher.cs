@@ -10,6 +10,8 @@ public class Launcher : MonoBehaviourPunCallbacks
     [Tooltip("Max number of players per room.")]
     [SerializeField] byte MaxPlayersPerRoom = 4;
 
+    bool IsConnecting;
+
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -24,11 +26,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.JoinRandomRoom();
+            PhotonNetwork.JoinRandomRoom();print("yes");
         }
         else
         {
-            PhotonNetwork.ConnectUsingSettings();
+            IsConnecting = PhotonNetwork.ConnectUsingSettings();print("no");
             PhotonNetwork.GameVersion = "1";
         }
     }
@@ -37,7 +39,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         print("connectedToMaster");
 
-        PhotonNetwork.JoinRandomRoom();
+        if(IsConnecting)
+        {
+            PhotonNetwork.JoinRandomRoom();
+
+            IsConnecting = false;
+        }
     }
 
     public override void OnJoinRandomFailed(short returnCode, string message)
@@ -55,5 +62,10 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         print("Room joined");
+
+        if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            PhotonNetwork.LoadLevel("Room for 1");
+        }
     }
 }
