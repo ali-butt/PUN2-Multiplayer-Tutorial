@@ -16,13 +16,21 @@ public class PlayerAnimatorManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(animator)
+        if (!animator)
         {
-            float h = Input.GetAxis("Horizontal");
-            float v = Mathf.Clamp(Input.GetAxis("Vertical"), 0, Input.GetAxis("Vertical"));
-
-            animator.SetFloat("Speed", h * h + v * v);
-            animator.SetFloat("Direction", h, directionDampTime, Time.deltaTime);
+            return;
         }
+
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        if (stateInfo.IsName("Base Layer.Run") && Input.GetButtonDown("Fire2"))
+        {
+            animator.SetTrigger("Jump");
+        }
+
+        float h = Input.GetAxis("Horizontal");
+        float v = Mathf.Clamp(Input.GetAxis("Vertical"), 0, Input.GetAxis("Vertical"));
+
+        animator.SetFloat("Speed", h * h + v * v);
+        animator.SetFloat("Direction", h, directionDampTime, Time.deltaTime);
     }
 }
