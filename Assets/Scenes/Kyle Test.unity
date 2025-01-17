@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 585726469}
   - component: {fileID: 585726468}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: floor Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -465,6 +465,10 @@ PrefabInstance:
     - target: {fileID: 466007719126338427, guid: f4eddc85e32ece84c999433d57176cec, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3097219803144753216, guid: f4eddc85e32ece84c999433d57176cec, type: 3}
+      propertyPath: sceneViewId
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
