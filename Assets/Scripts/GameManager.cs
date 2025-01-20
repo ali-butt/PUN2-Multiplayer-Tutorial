@@ -7,6 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
+
+    public static GameManager instance;
+
+    private void Awake() {
+        if(instance == null)
+            instance = this;
+        else
+            Destroy(this);
+    }
+    
     // Start is called before the first frame update
     void Start()
     {

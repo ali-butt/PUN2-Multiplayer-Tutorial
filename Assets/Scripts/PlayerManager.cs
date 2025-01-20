@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
-public class PlayerManager : MonoBehaviourPunCallbacks
+public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     [Tooltip("Beam of light")]
     [SerializeField] GameObject Beam;
@@ -16,10 +16,41 @@ public class PlayerManager : MonoBehaviourPunCallbacks
     void Start()
     {
         Beam.SetActive(false);
+
+        CameraWork _cameraWork = this.gameObject.GetComponent<CameraWork>();
+
+        if (_cameraWork != null)
+        {
+            if (photonView.IsMine)
+            {
+                _cameraWork.OnStartFollowing();
+            }
+        }
+        else
+        {
+            Debug.LogError("<Color=green><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
+        }
     }
 
     // Update is called once per frame
     void Update()
+    {
+
+        if(photonView.IsMine)
+        {
+            ProcessInput();
+        }
+
+        if (Beam && IsFiring != Beam.activeInHierarchy)
+        {
+            Beam.SetActive(IsFiring);
+        }
+
+        if(Health <= 0.0f)
+            GameManager.instance.LeaveRoom();
+    }
+
+    void ProcessInput()
     {
         if (Input.GetButtonDown("Fire1") && !IsFiring)
         {
@@ -29,11 +60,6 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         if (Input.GetButtonUp("Fire1") && IsFiring)
         {
             IsFiring = false;
-        }
-
-        if (Beam && IsFiring != Beam.activeInHierarchy)
-        {
-            Beam.SetActive(IsFiring);
         }
     }
 
@@ -79,4 +105,24 @@ public class PlayerManager : MonoBehaviourPunCallbacks
         // we slowly affect health when beam is constantly hitting us, so player has to move to prevent death.
         Health -= 0.1f * Time.deltaTime;
     }
+
+
+
+    #region IPunObservable implementation
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if(stream.IsWriting)
+        {
+            // We own this player: send the others our data
+            stream.SendNext(IsFiring);
+            stream.SendNext(Health);
+        }
+        else
+        {
+            // Network player, receive data
+            this.IsFiring = (bool)stream.ReceiveNext();
+            this.Health = (float)stream.ReceiveNext();
+        }
+    }
+    #endregion
 }
