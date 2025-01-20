@@ -12,6 +12,22 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public float Health = 1f;
 
+    [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
+    public static GameObject LocalPlayerInstance;
+
+    private void Awake()
+    {
+        // #Important
+        // used in GameManager.cs: we keep track of the localPlayer instance to prevent instantiation when levels are synchronized
+        if (photonView.IsMine)
+        {
+            PlayerManager.LocalPlayerInstance = this.gameObject;
+        }
+        // #Critical
+        // we flag as don't destroy on load so that instance survives level synchronization, thus giving a seamless experience when levels load.
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,7 +52,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
     void Update()
     {
 
-        if(photonView.IsMine)
+        if (photonView.IsMine)
         {
             ProcessInput();
         }
@@ -46,7 +62,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
             Beam.SetActive(IsFiring);
         }
 
-        if(Health <= 0.0f)
+        if (Health <= 0.0f)
             GameManager.instance.LeaveRoom();
     }
 
@@ -111,7 +127,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
     #region IPunObservable implementation
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        if(stream.IsWriting)
+        if (stream.IsWriting)
         {
             // We own this player: send the others our data
             stream.SendNext(IsFiring);
