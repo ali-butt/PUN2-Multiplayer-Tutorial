@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
 {
+    [Tooltip("The Player's UI GameObject Prefab")]
+    [SerializeField]
+    public GameObject PlayerUiPrefab;
+
     [Tooltip("Beam of light")]
     [SerializeField] GameObject Beam;
 
@@ -56,6 +60,17 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
         // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
         UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
         #endif
+
+
+        if (PlayerUiPrefab != null)
+        {
+            GameObject _uiGo =  Instantiate(PlayerUiPrefab);
+            _uiGo.SendMessage ("SetTarget", this, SendMessageOptions.RequireReceiver);
+        }
+        else
+        {
+            Debug.LogWarning("<Color=Red><a>Missing</a></Color> PlayerUiPrefab reference on player Prefab.", this);
+        }
     }
 
     // Update is called once per frame
@@ -177,6 +192,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             transform.position = new Vector3(0f, 5f, 0f);
         }
+
+        GameObject _uiGo = Instantiate(this.PlayerUiPrefab);
+        _uiGo.SendMessage("SetTarget", this, SendMessageOptions.RequireReceiver);
     }
     #endif
 
