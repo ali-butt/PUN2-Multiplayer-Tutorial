@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 
 public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -14,6 +15,9 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
 
     [Tooltip("The local player instance. Use this to know if the local player is represented in the Scene")]
     public static GameObject LocalPlayerInstance;
+
+
+    #region MonoBehaviour Callbacks
 
     private void Awake()
     {
@@ -46,6 +50,12 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
         {
             Debug.LogError("<Color=green><a>Missing</a></Color> CameraWork Component on playerPrefab.", this);
         }
+
+
+        #if UNITY_5_4_OR_NEWER
+        // Unity 5.4 has a new scene management. register a method to call CalledOnLevelWasLoaded.
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnSceneLoaded;
+        #endif
     }
 
     // Update is called once per frame
@@ -66,20 +76,7 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
             GameManager.instance.LeaveRoom();
     }
 
-    void ProcessInput()
-    {
-        if (Input.GetButtonDown("Fire1") && !IsFiring)
-        {
-            IsFiring = true;
-        }
-
-        if (Input.GetButtonUp("Fire1") && IsFiring)
-        {
-            IsFiring = false;
-        }
-    }
-
-
+    
     /// <summary>
     /// MonoBehaviour method called when the Collider 'other' enters the trigger.
     /// Affect Health of the Player if the collider is a beam
@@ -123,6 +120,19 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
     }
 
 
+    #if UNITY_5_4_OR_NEWER
+    public override void OnDisable()
+    {
+        // Always call the base to remove callbacks
+        base.OnDisable ();
+        UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    #endif
+
+    #endregion
+
+
+
 
     #region IPunObservable implementation
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -140,5 +150,35 @@ public class PlayerManager : MonoBehaviourPunCallbacks, IPunObservable
             this.Health = (float)stream.ReceiveNext();
         }
     }
+    #endregion
+
+
+
+    #region Private Methods
+
+    void ProcessInput()
+    {
+        if (Input.GetButtonDown("Fire1") && !IsFiring)
+        {
+            IsFiring = true;
+        }
+
+        if (Input.GetButtonUp("Fire1") && IsFiring)
+        {
+            IsFiring = false;
+        }
+    }
+    
+    #if UNITY_5_4_OR_NEWER
+    void OnSceneLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadingMode)
+    {
+        // check if we are outside the Arena and if it's the case, spawn around the center of the arena in a safe zone
+        if (!Physics.Raycast(transform.position, -Vector3.up, 5f))
+        {
+            transform.position = new Vector3(0f, 5f, 0f);
+        }
+    }
+    #endif
+
     #endregion
 }
