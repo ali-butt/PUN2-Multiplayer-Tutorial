@@ -235,7 +235,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 14.5}
   m_SizeDelta: {x: 160, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2490144173976979214
@@ -466,6 +466,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerNameText: {fileID: 5673256461746865439}
   playerHealthSlider: {fileID: 9096425578291242338}
+  screenOffset: {x: 0, y: 30, z: 0}
 --- !u!1 &6079255690903645438
 GameObject:
   m_ObjectHideFlags: 0
