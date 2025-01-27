@@ -35,8 +35,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
     }
 
+
+    #region Photon Callbacks
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
+        print("kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
         Debug.LogFormat("OnPlayerEnteredRoom() {0}", newPlayer.NickName); // not seen if you're the player connecting
 
         if (PhotonNetwork.IsMasterClient)
@@ -64,10 +68,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene(0);
     }
 
-    public void LeaveRoom()
-    {
-        PhotonNetwork.LeaveRoom();
-    }
+    #endregion
+
+
+
+    #region Private Methods
 
     public void LoadArena()
     {
@@ -80,4 +85,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.LogFormat("PhotonNetwork : Loading Level : {0}", PhotonNetwork.CurrentRoom.PlayerCount);
         PhotonNetwork.LoadLevel("Room for " + PhotonNetwork.CurrentRoom.PlayerCount);
     }
+
+    public void LeaveRoom()
+    {
+        PhotonNetwork.LeaveRoom();
+    }
+
+    #endregion
+
 }

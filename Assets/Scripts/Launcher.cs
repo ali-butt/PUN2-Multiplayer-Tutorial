@@ -26,20 +26,23 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsConnected)
         {
-            PhotonNetwork.JoinRandomRoom();print("yes");
+            PhotonNetwork.JoinRandomRoom(); print("yes");
         }
         else
         {
-            IsConnecting = PhotonNetwork.ConnectUsingSettings();print("no");
+            IsConnecting = PhotonNetwork.ConnectUsingSettings(); print("no");
             PhotonNetwork.GameVersion = "1";
         }
     }
+
+
+    #region MonoBehaviourPunCallbacks Callbacks
 
     public override void OnConnectedToMaster()
     {
         print("connectedToMaster");
 
-        if(IsConnecting)
+        if (IsConnecting)
         {
             PhotonNetwork.JoinRandomRoom();
 
@@ -49,7 +52,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        print("Joining random room failed");
+        Debug.Log("OnJoinRandomFailed() was called by PUN. No random room available, so we create one.\nCalling: PhotonNetwork.CreateRoom");
+
+        // #Critical: we failed to join a random room, maybe none exists or they are all full. No worries, we create a new room.
 
         PhotonNetwork.CreateRoom(null, new RoomOptions { MaxPlayers = MaxPlayersPerRoom });
     }
@@ -63,9 +68,11 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         print("Room joined");
 
-        if(PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
         {
             PhotonNetwork.LoadLevel("Room for 1");
         }
     }
+
+    #endregion
 }
