@@ -15,10 +15,10 @@ public class PlayerUI : MonoBehaviour
         [SerializeField]
         private Slider playerHealthSlider;
 
-        private PlayerManager target;
+        public PlayerManager target;
 
         float characterControllerHeight = 0f;
-        Transform targetTransform;
+        public Transform targetTransform;
         Renderer targetRenderer;
         CanvasGroup _canvasGroup;
         Vector3 targetPosition;
@@ -36,6 +36,7 @@ public class PlayerUI : MonoBehaviour
 
         private void Awake()
         {
+            this.transform.SetParent(GameObject.Find("Canvas").GetComponent<Transform>(), false);
             _canvasGroup = this.GetComponent<CanvasGroup>();        
         }
 
@@ -65,7 +66,7 @@ public class PlayerUI : MonoBehaviour
             // #Critical
             // Follow the Target GameObject on screen.
             if (targetTransform != null)
-            {
+            {print(target.photonView.Owner.NickName);
                 targetPosition = targetTransform.position;
                 targetPosition.y += characterControllerHeight;
                 this.transform.position = Camera.main.WorldToScreenPoint (targetPosition) + screenOffset;

@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 111580891070908379}
   - component: {fileID: 5750326116603391887}
   m_Layer: 0
-  m_Name: Beems
+  m_Name: Beams
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -219,8 +219,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.19937128, y: 0.093506455, z: 4.914107}
-  m_Center: {x: 0.060713023, y: 0.017237008, z: 0.0017025471}
+  m_Size: {x: 0.19937128, y: 0.093506455, z: 4.5937333}
+  m_Center: {x: 0.06071301, y: 0.017236993, z: 0.16188894}
 --- !u!1001 &466007719126209019
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -331,7 +331,7 @@ CharacterController:
   m_Enabled: 1
   serializedVersion: 3
   m_Height: 2
-  m_Radius: 0.5
+  m_Radius: 0.4
   m_SlopeLimit: 45
   m_StepOffset: 0.3
   m_SkinWidth: 0.08
@@ -388,7 +388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c51d07e03e4b4c4f96716f0d83a30fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerUiPrefab: {fileID: 6004776565515305638, guid: 33886fd7ac275164593a7fe4cb913d73, type: 3}
+  PlayerUiPrefab: {fileID: 647226199424074353, guid: ecac0283fabcfff4b916e93be4289fbf, type: 3}
   Beam: {fileID: 8966781593713200714}
   Health: 1
 --- !u!114 &3001452519455778157
