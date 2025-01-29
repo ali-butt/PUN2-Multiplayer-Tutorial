@@ -66,7 +66,7 @@ public class PlayerUI : MonoBehaviour
             // #Critical
             // Follow the Target GameObject on screen.
             if (targetTransform != null)
-            {print(target.photonView.Owner.NickName);
+            {
                 targetPosition = targetTransform.position;
                 targetPosition.y += characterControllerHeight;
                 this.transform.position = Camera.main.WorldToScreenPoint (targetPosition) + screenOffset;

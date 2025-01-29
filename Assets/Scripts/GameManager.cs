@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Realtime;
 using Photon.Pun;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameManager : MonoBehaviourPunCallbacks
 {
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.LogFormat("OnPlayerEnteredRoom() {0}", newPlayer.NickName); // not seen if you're the player connecting
 
         if (PhotonNetwork.IsMasterClient)
-        {
+        {print(PhotonNetwork.PlayerList.Count());
             Debug.LogFormat("OnPlayerEnteredRoom IsMasterClient {0}", PhotonNetwork.IsMasterClient); // called before OnPlayerLeftRoom
 
             LoadArena();

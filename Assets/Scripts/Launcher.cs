@@ -4,11 +4,18 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using Unity.VisualScripting;
+using UnityEngine.UI;
+using TMPro;
 
 public class Launcher : MonoBehaviourPunCallbacks
 {
+    [SerializeField] TMP_InputField NameInput;
+
     [Tooltip("Max number of players per room.")]
     [SerializeField] byte MaxPlayersPerRoom = 4;
+
+    [SerializeField] GameObject ConnectButton;
+    [SerializeField] Text DisconnectionCause;
 
     bool IsConnecting;
 
@@ -16,10 +23,12 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.AutomaticallySyncScene = true;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
 
+    private void Start()
+    {
+        DisconnectionCause.gameObject.SetActive(false);
+        ConnectButton.SetActive(true);
+        NameInput.interactable = true;
     }
 
     public void Connect()
@@ -62,6 +71,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogWarningFormat("OnDisconnected: ", cause);
+
+        ConnectButton.SetActive(true);
+
+        DisconnectionCause.gameObject.SetActive(true);
+        DisconnectionCause.text = cause.ToString();
+
+        NameInput.interactable = true;
     }
 
     public override void OnJoinedRoom()
